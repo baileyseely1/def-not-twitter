@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 document.addEventListener('click', function(e){
     if(e.target.dataset.like){
        handleLikeClick(e.target.dataset.like) 
-       console.log(e.target.dataset.like)
     }
     else if(e.target.dataset.retweet){
         handleRetweetClick(e.target.dataset.retweet)
@@ -19,6 +18,11 @@ document.addEventListener('click', function(e){
         handleDeleteBtnClick(e.target.dataset.delete)
     }
     
+    else if(e.target.id === 'reply-btn') {
+        handleReplyBtnClick(e.target.dataset.replybtn)
+        console.log(e.target.dataset.replybtn)
+    }
+
 })
  
 function handleLikeClick(tweetId){ 
@@ -53,6 +57,29 @@ function handleRetweetClick(tweetId){
 
 function handleReplyClick(replyId){
     document.getElementById(`replies-${replyId}`).classList.toggle('hidden')
+    
+}
+
+function handleReplyBtnClick(uuid) {
+    const replyInput = document.getElementById(`comment-${uuid}`)
+    console.log(replyInput.value)
+    
+    const tweetReplyObj = {
+        handle: `@TSMFanboy`,
+        profilePic: `images/codeninja.jpg`,
+        tweetText: replyInput.value,
+    }
+    
+    if (replyInput.value !== "") {
+    tweetsData.forEach(function(tweet){
+        if(tweet.uuid === `${uuid}`) { 
+        tweet.replies.push(tweetReplyObj)
+        }
+    })
+    
+    }
+
+    render()
 }
 
 function handleDeleteBtnClick(tweetId) {
@@ -88,6 +115,7 @@ function handleTweetBtnClick(){
 
 }
 
+
 function getFeedHtml(){
     let feedHtml = ``
     
@@ -108,7 +136,7 @@ function getFeedHtml(){
         let repliesHtml = ''
 
         let deleteBtn = ''
-
+ 
         if (tweet.hasDeleteBtn) {
             deleteBtn += `
             <button class="delete-btn">
@@ -165,6 +193,11 @@ function getFeedHtml(){
         </div>            
     </div>
     <div class="hidden" id="replies-${tweet.uuid}">
+    <div class="tweet-reply-area">
+    <img src="images/codeninja.jpg" class="profile-pic">
+    <textarea class="reply-area" placeholder="Reply to ${tweet.handle}" id="comment-${tweet.uuid}"></textarea>
+    </div>
+    <button class="tweet-btn" id="reply-btn" data-replybtn="${tweet.uuid}">Reply</button>
         ${repliesHtml}
     </div>   
 </div>
@@ -178,4 +211,5 @@ function render(){
 }
 
 render()
+
 
