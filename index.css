@@ -75,6 +75,11 @@ textarea{
     font-weight: 600;
 }
 
+.tweet-btn:hover,
+.tweet-btn:focus{
+    color: whitesmoke;
+}
+
 .delete-btn {
     border: none;
     position: absolute;
