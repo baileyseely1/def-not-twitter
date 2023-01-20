@@ -71,7 +71,7 @@ function handleTweetBtnClick(){
 
     if(tweetInput.value){
         tweetsData.unshift({
-            handle: `@shadow`,
+            handle: `@TSMFanboy`,
             profilePic: `images/codeninja.jpg`,
             likes: 0,
             retweets: 0,
