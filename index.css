@@ -46,7 +46,11 @@ header{
     gap: 10px;
 }
 
-/* textareas + btn */
+.pos-relative {
+    position: relative;
+}
+
+/* textareas + btns */
 
 textarea{
     border: none;
@@ -59,16 +63,24 @@ textarea{
     line-height: 30px;
 }
 
-button{
+.tweet-btn{
     background-color: #1DA1F2;
     border: none;
     color: white;
-    padding: 10px 19px;
+    padding: 10px 0;
     border-radius: 20px;
     width: 100%; 
     cursor: pointer;
     font-size: 20px;
     font-weight: 600;
+}
+
+.delete-btn {
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: white;
 }
 
 /* tweet */
