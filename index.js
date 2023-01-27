@@ -1,5 +1,13 @@
 import { tweetsData } from './data.js'
-import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid'
+
+const localTweets = JSON.parse(localStorage.getItem('tweets'))
+
+let allTweets = tweetsData
+
+if (localTweets) {
+    allTweets = localTweets
+}
 
 document.addEventListener('click', function(e){
     if(e.target.dataset.like){
@@ -20,13 +28,12 @@ document.addEventListener('click', function(e){
     
     else if(e.target.id === 'reply-btn') {
         handleReplyBtnClick(e.target.dataset.replybtn)
-        console.log(e.target.dataset.replybtn)
     }
 
 })
- 
+
 function handleLikeClick(tweetId){ 
-    const targetTweetObj = tweetsData.find(function(tweet){
+    const targetTweetObj = allTweets.find(function(tweet){
         return tweet.uuid === tweetId
     })
 
@@ -41,7 +48,7 @@ function handleLikeClick(tweetId){
 }
 
 function handleRetweetClick(tweetId){
-    const targetTweetObj = tweetsData.find(function(tweet){
+    const targetTweetObj = allTweets.find(function(tweet){
         return tweet.uuid === tweetId
     })
     
@@ -62,34 +69,32 @@ function handleReplyClick(replyId){
 
 function handleReplyBtnClick(uuid) {
     const replyInput = document.getElementById(`comment-${uuid}`)
-    console.log(replyInput.value)
     
-    const tweetReplyObj = {
-        handle: `@TSMFanboy`,
-        profilePic: `images/codeninja.jpg`,
-        tweetText: replyInput.value,
-    }
-    
-    if (replyInput.value !== "") {
-    tweetsData.forEach(function(tweet){
+    if (replyInput.value) {
+    allTweets.forEach(function(tweet){
         if(tweet.uuid === `${uuid}`) { 
-        tweet.replies.push(tweetReplyObj)
+        tweet.replies.unshift({
+            handle: `@TSMFanboy`,
+            profilePic: `images/codeninja.jpg`,
+            tweetText: replyInput.value,
+        })
         }
     })
     
     }
 
     render()
+
 }
 
 function handleDeleteBtnClick(tweetId) {
-    const targetTweetObj = tweetsData.find(function(tweet){
+    const targetTweetObj = allTweets.find(function(tweet){
         return tweet.uuid === tweetId
     })
 
-    const removeTargetTweetObj = tweetsData.findIndex(item => item.uuid === tweetId)
-    tweetsData.splice(removeTargetTweetObj, 1)
-
+    const removeTargetTweetObj = allTweets.findIndex(item => item.uuid === tweetId)
+ allTweets.splice(removeTargetTweetObj, 1)
+    saveToLocalStorage()
     render()    
 }
 
@@ -97,7 +102,9 @@ function handleTweetBtnClick(){
     const tweetInput = document.getElementById('tweet-input')
 
     if(tweetInput.value){
-        tweetsData.unshift({
+
+        const newTweet = 
+        {
             handle: `@TSMFanboy`,
             profilePic: `images/codeninja.jpg`,
             likes: 0,
@@ -108,7 +115,9 @@ function handleTweetBtnClick(){
             isRetweeted: false,
             hasDeleteBtn: true,
             uuid: uuidv4()
-        })
+         }
+
+        allTweets.unshift(newTweet)
     render()
     tweetInput.value = ''
     }
@@ -119,7 +128,7 @@ function handleTweetBtnClick(){
 function getFeedHtml(){
     let feedHtml = ``
     
-    tweetsData.forEach(function(tweet){
+    allTweets.forEach(function(tweet){
         
         let likeIconClass = ''
         
@@ -132,8 +141,6 @@ function getFeedHtml(){
         if (tweet.isRetweeted){
             retweetIconClass = 'retweeted'
         }
-        
-        let repliesHtml = ''
 
         let deleteBtn = ''
  
@@ -144,6 +151,8 @@ function getFeedHtml(){
             </button> 
             `
         }
+        
+        let repliesHtml = ''
         
         if(tweet.replies.length > 0){
             tweet.replies.forEach(function(reply){
@@ -208,6 +217,7 @@ function getFeedHtml(){
 
 function render(){
     document.getElementById('feed').innerHTML = getFeedHtml()
+    localStorage.setItem('tweets', JSON.stringify(allTweets));
 }
 
 render()
