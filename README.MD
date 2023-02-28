@@ -1,7 +1,9 @@
--- Simple twitter clone made with vanilla html/css/js
+# Simple twitter clone made with vanilla html/css/js
 
--- TODO 
+## TODO 
     - Add dark/light mode options
     - Save tweets, likes, replies and retweets to localStorage
     - Add the ability to reply to a specific tweet (done)
         - Add delete btn to replies 
+        
+https://league-twit.netlify.app/
